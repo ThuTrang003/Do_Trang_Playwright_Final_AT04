@@ -1,13 +1,3 @@
-"""
-BasePage: nơi tập trung các thao tác dùng chung (wait, click, fill, screenshot...)
-Mọi Page Object khác kế thừa từ class này để tránh lặp code.
-
-Ghi chú từ DOM thật đã thu thập:
-- Toast/thông báo dùng thư viện "notistack" (dấu hiệu: <section aria-label="Notifications alt+T">).
-  Notistack v2+ render nội dung trong phần tử có class chứa "notistack-MuiContent".
-- Lỗi validate của MUI TextField thể hiện qua class "Mui-error" trên .MuiFormControl-root
-  hoặc thuộc tính aria-invalid="true" trên input.
-"""
 from __future__ import annotations
 
 import allure

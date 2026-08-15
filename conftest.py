@@ -2,10 +2,7 @@
 conftest.py gốc của project.
 Chứa:
 - Fixture khởi tạo Playwright browser/page theo cấu hình .env
-- Fixture đăng nhập sẵn (authenticated_page) -> LUÔN dừng lại ở HomePage sau khi login.
-  Muốn tới "Change my profile" / "Setting account" PHẢI dùng HomePage.go_to_profile()/
-  go_to_settings() (điều hướng client-side), KHÔNG được page.goto()/reload() vì hệ thống
-  lưu phiên đăng nhập trong bộ nhớ JS - reload sẽ văng về Login.
+- Fixture đăng nhập sẵn (authenticated_page) 
 - Fixture api_client (Playwright APIRequestContext) cho test API
 - Hook tự động chụp screenshot + đính log vào Allure khi test FAIL
 - Ghi file allure environment.properties để hiển thị thông tin môi trường trên report
@@ -90,16 +87,7 @@ def api_client(api_request_context):
 @pytest.fixture(scope="session")
 def auth_token(playwright_instance):
     """
-    Đăng nhập qua API 1 lần / session để lấy token dùng chung cho các test API.
-
-    TODO QUAN TRỌNG (chưa xác nhận được với hệ thống thật):
-    1) Path chính xác của API Login (đang đoán "/api/login" - xem api/endpoints.py).
-    2) Cơ chế xác thực thật là Bearer token (header Authorization) hay cookie phiên?
-       -> Mở tab Headers của request GET /api/me hoặc PATCH /api/profile trong DevTools,
-          xem có "Authorization: Bearer ..." trong Request Headers không.
-       -> Nếu hệ thống dùng COOKIE thay vì Bearer token, cách lấy token dưới đây sẽ không
-          hoạt động; thay vào đó cần dùng `context.request` (chia sẻ cookie với browser
-          context đã login qua UI) thay vì tạo APIRequestContext độc lập như hiện tại.
+    Đăng nhập qua API 1 lần / session để lấy token dùng chung cho các test API.s
     """
     ctx = playwright_instance.request.new_context(base_url=config.API_BASE_URL)
     from api.endpoints import Endpoints
@@ -125,7 +113,7 @@ def auth_token(playwright_instance):
 
 
 # ---------------------------------------------------------------------------
-# Hook: tự động chụp screenshot + đính log khi test FAIL (bắt buộc theo yêu cầu)
+# Hook: tự động chụp screenshot + đính log khi test FAIL 
 # ---------------------------------------------------------------------------
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):

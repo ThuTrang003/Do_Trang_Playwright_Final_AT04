@@ -7,4 +7,3 @@ allure-report/
 screenshots/
 logs/*.log
 .pytest_cache/
-README.md

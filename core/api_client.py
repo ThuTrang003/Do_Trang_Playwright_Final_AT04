@@ -1,10 +1,3 @@
-"""
-Client gọi API dùng Playwright's APIRequestContext (đồng bộ tech stack Playwright)
-thay vì thư viện requests, để tận dụng cùng 1 hệ sinh thái báo cáo / trace.
-
-Mọi test API nên dùng qua class này thay vì gọi request trực tiếp,
-để log request/response và tự động đính kèm vào Allure.
-"""
 import json
 from typing import Any, Optional
 
