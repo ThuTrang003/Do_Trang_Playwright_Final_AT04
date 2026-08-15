@@ -1,5 +1,6 @@
 import pytest
 from Pages.login_page import LoginPage
+from Pages.profile_page import ProfilePage
 from Utils.path_helper import PathFile
 
 
@@ -21,13 +22,13 @@ def logged_in_home(login, get_credential):
     )
     yield login
 
-# @pytest.fixture
-# def logged_in_manage_client(page, login, get_credential):
-#     login.login(
-#         get_credential["URL"],
-#         get_credential["USERNAME"],
-#         get_credential["PASSWORD"]
-#     )
-#     manageClientsPage = ManageClientsPage(page)
+@pytest.fixture
+def logged_in_profile_manage(page, login, get_credential):
+    login.login(
+        get_credential["URL"],
+        get_credential["USERNAME"],
+        get_credential["PASSWORD"]
+    )
+    profile_manage = ProfilePage(page)
 
-#     yield manageClientsPage
+    yield profile_manage

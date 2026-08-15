@@ -1,0 +1,34 @@
+{
+  "theme_cases": [
+    {
+      "case_id": "SETTINGS_UI_THEME_01",
+      "title": "Chuyển Theme sang Dark -> tab Dark được chọn",
+      "theme": "dark"
+    },
+    {
+      "case_id": "SETTINGS_UI_THEME_02",
+      "title": "Chuyển Theme sang Light -> tab Light được chọn",
+      "theme": "light"
+    },
+    {
+      "case_id": "SETTINGS_UI_THEME_03",
+      "title": "Chuyển Theme sang System -> tab System được chọn",
+      "theme": "system"
+    }
+  ],
+  "color_cases": [
+    {
+      "case_id": "SETTINGS_UI_COLOR_01",
+      "title": "Chọn 1 màu trong bảng Select color rồi Save -> lưu thành công",
+      "color_index": 0,
+      "expect_message_contains": "success"
+    }
+  ],
+  "reset_cases": [
+    {
+      "case_id": "SETTINGS_UI_RESET_01",
+      "title": "Đổi Theme sang Dark rồi bấm Reset -> quay lại theme ban đầu (không lưu)",
+      "theme": "dark"
+    }
+  ]
+}

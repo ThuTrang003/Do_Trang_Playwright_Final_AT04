@@ -1,31 +1,33 @@
-from Pages.base_page import BasePage
+from playwright.sync_api import Page
+from pages.base_page import BasePage
 
 class LoginPage(BasePage):
-    def __init__(self, page):
+
+    PATH = "/sign-in" 
+
+    def __init__(self, page: Page):
         super().__init__(page)
-        self.textbox_email = self.page.get_by_role('textbox', name='Email address', exact=True)
-        self.textbox_password = self.page.get_by_role('textbox', name='Password', exact=True)
-        self.button_login = self.page.get_by_role('button', name='Login account', exact=False)
+        self.email_input = page.get_by_role("textbox", name="Email address")
+        self.password_input = page.get_by_role("textbox", name="Password")
+        self.login_button = page.get_by_role("button", name="Login account")
+    
+    def open(self):
+        self.goto(self.PATH)
+        return self
 
+    def login(self, email: str, password: str):
+        self.fill(self.email_input, email, "Email address")
+        self.fill(self.password_input, password, "Password")
+        self.click(self.login_button, "Login account")
+        return self
 
-    def login(self, url: str, email: str, password: str):
-        """Thực hiện hành động đăng nhập với Email và mật khẩu được cung cấp.
+    def get_error_message(self) -> str:
+        return self.wait_for_toast()
 
-        Args:
-            email (str): Email để đăng nhập.
-            password (str): Mật khẩu để đăng nhập.
-        """
-        self.navigate(url)
-        self.set_text(self.textbox_email, email)
-        self.set_text(self.textbox_password, password)
-        self.click(self.button_login)
-
-    def verify_login_success(self, expected_value: str):
-        """Xác minh đăng nhập thành công bằng cách kiểm tra các phần tử giao diện người dùng và tên hồ sơ hiển thị.
-
-        Args:
-            expected_value (str): Giá trị tên hồ sơ mong đợi cần xác minh.
-        """
-        # self.verify_element_visible(self.left_menu)
-        # self.verify_element_visible(self.header_component)
-        # self.verify_element_text(self.label_profile_name, expected_value, is_exact=False)
+    def is_logged_in(self) -> bool:
+        """Sau khi login thành công, hệ thống điều hướng ra khỏi /sign-in."""
+        try:
+            self.page.wait_for_url(lambda url: "/sign-in" not in url, timeout=10000)
+            return True
+        except Exception:
+            return False

@@ -1,0 +1,102 @@
+{
+  "login_cases": [
+    {
+      "case_id": "API_LOGIN_01",
+      "title": "Đăng nhập với email/password hợp lệ -> 200",
+      "password_env": true,
+      "expected_status": 200
+    },
+    {
+      "case_id": "API_LOGIN_02",
+      "title": "Đăng nhập với password sai -> 401",
+      "password_env": false,
+      "wrong_password": "WrongPassword@1",
+      "expected_status": 401
+    }
+  ],
+  "change_password_cases": [
+    {
+      "case_id": "API_PWD_01",
+      "title": "Đổi mật khẩu qua PATCH /api/profile với password_old/password hợp lệ -> 200",
+      "use_valid_token": true,
+      "payload": {
+        "name": "Trang",
+        "email": "auto82@gmail.com",
+        "password_old": "Test123@",
+        "password": "NewTest123@",
+        "avatarUrl": "",
+        "phone": "123456789",
+        "address": "Thành phố Hà Nội"
+      },
+      "expected_status": 200
+    },
+    {
+      "case_id": "API_PWD_02",
+      "title": "Sai password_old -> 400",
+      "use_valid_token": true,
+      "payload": {
+        "name": "Trang",
+        "email": "auto82@gmail.com",
+        "password_old": "WrongPassword@1",
+        "password": "NewTest123@",
+        "avatarUrl": "",
+        "phone": "123456789",
+        "address": "Thành phố Hà Nội"
+      },
+      "expected_status": 400
+    },
+    {
+      "case_id": "API_PWD_03",
+      "title": "password mới quá ngắn/không đủ mạnh -> 400",
+      "use_valid_token": true,
+      "payload": {
+        "name": "Trang",
+        "email": "auto82@gmail.com",
+        "password_old": "Test123@",
+        "password": "123",
+        "avatarUrl": "",
+        "phone": "123456789",
+        "address": "Thành phố Hà Nội"
+      },
+      "expected_status": 400
+    },
+    {
+      "case_id": "API_PWD_04",
+      "title": "Gọi PATCH /api/profile đổi mật khẩu không có token -> 401",
+      "use_valid_token": false,
+      "payload": {
+        "name": "Trang",
+        "email": "auto82@gmail.com",
+        "password_old": "Test123@",
+        "password": "NewTest123@",
+        "avatarUrl": "",
+        "phone": "123456789",
+        "address": "Thành phố Hà Nội"
+      },
+      "expected_status": 401
+    }
+  ],
+  "update_settings_cases": [
+    {
+      "case_id": "API_SETTINGS_01",
+      "title": "PATCH /api/profile cập nhật config.theme + config.mainColor hợp lệ -> 200",
+      "use_valid_token": true,
+      "payload": {"config": {"theme": "dark", "mainColor": "#4caf50"}},
+      "expected_status": 200
+    },
+    {
+      "case_id": "API_SETTINGS_02",
+      "title": "config.theme không hợp lệ (ngoài light/dark/system) -> 400",
+      "use_valid_token": true,
+      "payload": {"config": {"theme": "rainbow", "mainColor": "#4caf50"}},
+      "expected_status": 400
+    },
+    {
+      "case_id": "API_SETTINGS_03",
+      "title": "Gọi API cập nhật settings không có token -> 401",
+      "use_valid_token": false,
+      "payload": {"config": {"theme": "dark", "mainColor": "#4caf50"}},
+      "expected_status": 401
+    }
+  ]
+}

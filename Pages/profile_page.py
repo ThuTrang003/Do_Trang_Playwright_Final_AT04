@@ -1,76 +1,86 @@
-from Pages.base_page import BasePage
-from Utils.path_helper import PathFile
+from playwright.sync_api import Page
+
+from pages.base_page import BasePage
+
 
 class ProfilePage(BasePage):
-    URL_PROFILE_PAGE = "https://book.anhtester.com/user-management/my-profile"
-
-    def __init__(self, page):
+    def __init__(self, page: Page):
         super().__init__(page)
-        self.avatar_input = page.locator("//input[@name='avatar']")
 
-        self.name = page.get_by_role("textbox", name="Name")
-        self.phone = page.get_by_role("textbox", name="Phone")
-        self.select_division = page.get_by_role("combobox", name="Division")
-        self.select_ward = page.get_by_role("combobox", name="Ward")
-        self.address = page.get_by_role("textbox", name="Address")
-        self.email = page.get_by_role("textbox", name="Email")
+        # --- Thông tin cá nhân ---
+        self.name_input = page.locator('input[name="name"]')
+        self.phone_input = page.locator('input[name="phone"]')
+        self.division_input = page.get_by_label("Division")
+        self.ward_input = page.get_by_label("Ward")
+        self.address_textarea = page.locator("#address")
+        self.avatar_file_input = page.locator('input[name="avatar"]')
+        self.avatar_dropzone = page.get_by_text("Upload photo")
+        self.email_input = page.locator('input[name="email"]')
 
-        self.old_password = page.get_by_role("textbox", name="Old Password")
-        self.new_password = page.get_by_role("textbox", name="Password")
-        self.confirm_password = page.get_by_role("textbox", name="Password Confirmation")
+        # --- Đổi mật khẩu (nằm chung trang Profile) ---
+        self.old_password_input = page.locator('input[name="oldPassword"]')
+        self.new_password_input = page.locator('input[name="password"]')
+        self.confirm_password_input = page.locator('input[name="password_confirmation"]')
 
-        self.save = page.get_by_role("button",name="Save Profile")
+        # --- Nút hành động ---
+        self.save_button = page.get_by_role("button", name="Save Profile")
+        self.reset_button = page.get_by_role("button", name="Reset")
 
-    def navigate_profile_page(self):
-        self.navigate(self.URL_PROFILE_PAGE)
+    # ---------- Thông tin cá nhân ----------
+    def update_name(self, name: str):
+        self.fill(self.name_input, name, "Name")
+        return self
 
-    def upload_photo(self, file_path: str):
-        """
-        Upload avatar.
-        """
-        self.upload_file(self.avatar_input, PathFile.get_string_file_path(file_path))
-        self.click(self.save)
+    def update_phone(self, phone: str):
+        self.fill(self.phone_input, phone, "Phone")
+        return self
 
-    def update_profile(
-        self,
-        name: str = None,
-        email:str = None,
-        phone: str = None,
-        division: str = None,
-        ward: str = None,
-        address: str = None,
-        avatar_photo:str = None
-    ):
+    def update_division(self, division: str):
+        """Chọn Division qua MUI Autocomplete: gõ text rồi Enter."""
+        self.division_input.click()
+        self.division_input.fill(division)
+        self.page.keyboard.press("Enter")
+        return self
 
-        # if profile.name:
-        if name is not None:
-            self.set_text(self.name, name)
+    def update_ward(self, ward: str):
+        self.ward_input.click()
+        self.ward_input.fill(ward)
+        self.page.keyboard.press("Enter")
+        return self
 
-        if email is not None:
-            self.set_text(self.email, email)
+    def upload_avatar(self, file_path: str):
+        # input[type=file] bị ẩn (visually-hidden) -> set_input_files vẫn hoạt động trực tiếp
+        self.avatar_file_input.set_input_files(file_path)
+        return self
 
-        if phone is not None:
-            self.set_text(self.phone, phone)
-
-        if division is not None:
-            self.select_dropdown(self.select_division, division, True)
-
-        if ward is not None:
-            self.select_dropdown(self.select_ward, ward, True)
-
-        if address is not None:
-            self.set_text(self.address, address)
-
-        if avatar_photo is not None:
-            self.upload_file(self.avatar_input, PathFile.get_string_file_path(avatar_photo))
-
-        self.click(self.save)
-
+    # ---------- Đổi mật khẩu ----------
     def change_password(self, old_password: str, new_password: str, confirm_password: str):
-        """
-        Change password.
-        """
-        self.set_text(self.old_password, old_password)
-        self.set_text(self.new_password, new_password)
-        self.set_text(self.confirm_password, confirm_password)
-        self.click(self.save)
+        self.fill(self.old_password_input, old_password, "Old Password")
+        self.fill(self.new_password_input, new_password, "New Password")
+        self.fill(self.confirm_password_input, confirm_password, "Password Confirmation")
+        return self
+
+    # ---------- Hành động ----------
+    def save(self):
+        self.click(self.save_button, "Nút Save Profile")
+        return self
+
+    def reset(self):
+        self.click(self.reset_button, "Nút Reset")
+        return self
+
+    def is_save_button_enabled(self) -> bool:
+        return self.save_button.is_enabled()
+
+    # ---------- Getter để verify ----------
+    def get_name_value(self) -> str:
+        return self.name_input.input_value()
+
+    def get_phone_value(self) -> str:
+        return self.phone_input.input_value()
+
+    def get_email_value(self) -> str:
+        return self.email_input.input_value()
+
+    def get_division_value(self) -> str:
+        return self.division_input.input_value()

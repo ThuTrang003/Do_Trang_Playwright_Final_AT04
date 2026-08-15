@@ -1,0 +1,10 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+allure-results/
+allure-report/
+screenshots/
+logs/*.log
+.pytest_cache/
+README.md

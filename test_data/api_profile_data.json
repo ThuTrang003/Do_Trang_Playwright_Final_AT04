@@ -1,0 +1,63 @@
+{
+  "get_profile_cases": [
+    {
+      "case_id": "API_PROFILE_GET_01",
+      "title": "GET /api/me với token hợp lệ -> 200",
+      "use_valid_token": true,
+      "expected_status": 200
+    },
+    {
+      "case_id": "API_PROFILE_GET_02",
+      "title": "GET /api/me không có token -> 401",
+      "use_valid_token": false,
+      "expected_status": 401
+    }
+  ],
+  "update_profile_cases": [
+    {
+      "case_id": "API_PROFILE_PATCH_01",
+      "title": "PATCH /api/profile với payload hợp lệ (name/phone/address) -> 200",
+      "use_valid_token": true,
+      "payload": {
+        "name": "API Automation User",
+        "email": "auto82@gmail.com",
+        "password_old": "",
+        "password": "",
+        "avatarUrl": "",
+        "phone": "0977123456",
+        "address": "Thành phố Hồ Chí Minh"
+      },
+      "expected_status": 200
+    },
+    {
+      "case_id": "API_PROFILE_PATCH_02",
+      "title": "PATCH /api/profile thiếu field bắt buộc (email) -> 422",
+      "use_valid_token": true,
+      "payload": {
+        "name": "Nguyễn Văn A",
+        "email": "",
+        "password_old": "",
+        "password": "",
+        "avatarUrl": "",
+        "phone": "0977123456",
+        "address": "Thành phố Hồ Chí Minh"
+      },
+      "expected_status": 422
+    },
+    {
+      "case_id": "API_PROFILE_PATCH_03",
+      "title": "PATCH /api/profile không có token -> 401",
+      "use_valid_token": false,
+      "payload": {
+        "name": "No Token User",
+        "email": "auto82@gmail.com",
+        "password_old": "",
+        "password": "",
+        "avatarUrl": "",
+        "phone": "0977123456",
+        "address": "Thành phố Hồ Chí Minh"
+      },
+      "expected_status": 401
+    }
+  ]
+}

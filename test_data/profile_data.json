@@ -1,0 +1,89 @@
+{
+  "info_cases": [
+    {
+      "case_id": "PROFILE_UI_01",
+      "title": "Cập nhật Name + Phone hợp lệ -> lưu thành công",
+      "name": "Nguyen Van Automation",
+      "phone": "0987654321",
+      "expect_success": true,
+      "expect_message_contains": "success"
+    },
+    {
+      "case_id": "PROFILE_UI_02",
+      "title": "Để trống Name (bắt buộc) -> không lưu được / báo lỗi",
+      "name": "",
+      "phone": "0987654321",
+      "expect_success": false,
+      "expect_message_contains": "required"
+    },
+    {
+      "case_id": "PROFILE_UI_03",
+      "title": "Phone sai định dạng (chứa chữ) -> báo lỗi validate",
+      "name": "Nguyen Van Automation",
+      "phone": "abc123",
+      "expect_success": false,
+      "expect_message_contains": "invalid"
+    },
+    {
+      "case_id": "PROFILE_UI_04",
+      "title": "Name chứa ký tự tiếng Việt có dấu -> lưu thành công",
+      "name": "Nguyễn Văn Ánh - QA 01",
+      "phone": "0912345678",
+      "expect_success": true,
+      "expect_message_contains": "success"
+    },
+    {
+      "case_id": "PROFILE_UI_05",
+      "title": "Name vượt quá độ dài cho phép -> báo lỗi validate",
+      "name": "A123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345",
+      "phone": "0987654321",
+      "expect_success": false,
+      "expect_message_contains": "max"
+    }
+  ],
+  "address_cases": [
+    {
+      "case_id": "PROFILE_UI_ADDR_01",
+      "title": "Chọn Division + Ward hợp lệ -> Address tự sinh & lưu thành công",
+      "division": "Ha Noi",
+      "ward": "Hoan Kiem",
+      "expect_success": true,
+      "expect_message_contains": "success"
+    }
+  ],
+  "password_cases": [
+    {
+      "case_id": "PROFILE_PWD_01",
+      "title": "Đổi mật khẩu hợp lệ -> thành công",
+      "use_config_old_password": true,
+      "old_password": null,
+      "new_password": "TempChange@2026",
+      "confirm_password": "TempChange@2026",
+      "expect_success": true,
+      "expect_message_contains": "Upload profile success",
+      "rollback": true
+    },
+    {
+      "case_id": "PROFILE_PWD_02",
+      "title": "Sai Old Password -> báo lỗi",
+      "use_config_old_password": false,
+      "old_password": "WrongPassword@1",
+      "new_password": "NewTest1234@",
+      "confirm_password": "NewTest1234@",
+      "expect_success": false,
+      "expect_message_contains": "Invalid data",
+      "rollback": false
+    },
+    {
+      "case_id": "PROFILE_PWD_03",
+      "title": "Password Confirmation không khớp Password -> báo lỗi",
+      "use_config_old_password": true,
+      "old_password": null,
+      "new_password": "NewTest1234@",
+      "confirm_password": "Mismatch@123",
+      "expect_success": false,
+      "expect_message_contains": "Password confirmation does not match.",
+      "rollback": false
+    }
+  ]
+}
