@@ -1,15 +1,10 @@
 """
 Nhóm UI - Chức năng "Change my profile"
-Trang thực tế gồm: Name/Phone/Division/Ward/Address/Avatar + Old/New Password.
-Data-driven: dữ liệu lấy từ test_data/profile_data.json
-
-QUAN TRỌNG: KHÔNG dùng page.goto()/reload() để tới trang Profile vì hệ thống lưu
-phiên đăng nhập trong bộ nhớ JS - phải điều hướng qua HomePage.go_to_profile()
-(dùng fixture `home_page`, kế thừa từ `authenticated_page`).
+- Update: Name/Phone/Division/Ward/Address/Avatar + Change Password.
+- Data-driven: dữ liệu lấy từ test_data/profile_data.json
 """
 import pytest
 import allure
-import time
 
 from config.config import config
 from pages.home_page import HomePage
@@ -17,7 +12,6 @@ from pages.login_page import LoginPage
 from utils.data_reader import load_json
 
 DATA = load_json("profile_data.json")
-
 
 @allure.feature("Change my profile")
 @pytest.mark.ui

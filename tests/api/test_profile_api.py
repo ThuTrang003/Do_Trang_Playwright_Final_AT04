@@ -16,12 +16,10 @@ from utils.data_reader import load_json
 
 DATA = load_json("api_profile_data.json")
 
-
 def _headers(token, use_valid_token: bool) -> dict:
     if use_valid_token and token:
         return {"Authorization": f"Bearer {token}"}
     return {}
-
 
 @allure.feature("API - Profile")
 @pytest.mark.api
@@ -62,7 +60,11 @@ class TestProfileAPI:
 
         with allure.step("Gọi PATCH /api/profile với payload data-driven"):
             headers = _headers(auth_token, case["use_valid_token"])
-            response = api_client.patch(Endpoints.UPDATE_PROFILE, data=case["payload"], headers=headers)
+            response = api_client.patch(
+                Endpoints.UPDATE_PROFILE,
+                data=case["payload"],
+                headers=headers
+            )
 
         with allure.step(f"Xác minh status code = {case['expected_status']}"):
             assert response.status == case["expected_status"], (

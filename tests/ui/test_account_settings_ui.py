@@ -1,10 +1,7 @@
 """
 Nhóm UI - Chức năng "Setting account"
-Trang thực tế gồm: Theme (Light/Dark/System) + Select color + Save/Reset.
-Data-driven: dữ liệu lấy từ test_data/settings_data.json
-
-QUAN TRỌNG: KHÔNG dùng page.goto()/reload() để tới trang Settings vì hệ thống lưu
-phiên đăng nhập trong bộ nhớ JS - phải điều hướng qua HomePage.go_to_settings().
+- Theme (Light/Dark/System) + Select color + Save/Reset.
+- Data-driven: dữ liệu lấy từ test_data/settings_data.json
 """
 import pytest
 import allure

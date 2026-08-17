@@ -4,9 +4,6 @@ Endpoint THẬT: đổi mật khẩu và cập nhật settings (theme/color) đ�
 PATCH /api/profile như test_profile_api.py, chỉ khác payload gửi lên:
     - Đổi mật khẩu:  {..., "password_old": "...", "password": "..."}
     - Setting account: {"config": {"theme": "...", "mainColor": "#hex"}}
-
-Mỗi endpoint/nghiệp vụ đảm bảo tối thiểu 1 case 200 + 1 case lỗi (400/401...)
-Data-driven: dữ liệu lấy từ test_data/api_account_data.json + credential từ .env
 """
 import pytest
 import allure
@@ -16,7 +13,6 @@ from config.config import config
 from utils.data_reader import load_json
 
 DATA = load_json("api_account_data.json")
-
 
 def _headers(token, use_valid_token: bool) -> dict:
     if use_valid_token and token:

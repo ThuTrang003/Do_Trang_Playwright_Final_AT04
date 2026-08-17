@@ -38,15 +38,15 @@
       "name": "A123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345",
       "phone": "0987654321",
       "expect_success": false,
-      "expect_message_contains": "max"
+      "expect_message_contains": "Name must be less than 250 characters"
     }
   ],
   "address_cases": [
     {
       "case_id": "PROFILE_UI_ADDR_01",
       "title": "Chọn Division + Ward hợp lệ -> Address tự sinh & lưu thành công",
-      "division": "Ha Noi",
-      "ward": "Hoan Kiem",
+      "division": "Thành phố Hà Nội",
+      "ward": "Phường Hoàn Kiếm",
       "expect_success": true,
       "expect_message_contains": "success"
     }

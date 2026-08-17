@@ -63,6 +63,15 @@ class ApiClient:
         return response
 
     def patch(self, endpoint: str, data: Optional[dict] = None, headers: Optional[dict] = None) -> APIResponse:
+        """
+        Send a PATCH request with resource ID and request body.
+        Args:
+            endpoint: API endpoint.
+            data: Request body.
+            headers: HTTP headers.
+        Returns:
+            APIResponse: API response.
+        """
         url = self._full_url(endpoint)
         response = self._ctx.patch(url, data=data, headers=headers)
         self._log_and_attach("PATCH", url, data, response)
