@@ -106,7 +106,6 @@ def auth_token(playwright_instance):
     else:
         logger.warning(
             f"Login API trả về {response.status} - kiểm tra lại Endpoints.LOGIN trong api/endpoints.py "
-            f"(có thể path chưa đúng, xem TODO trong file đó)."
         )
     ctx.dispose()
     return token

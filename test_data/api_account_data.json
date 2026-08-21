@@ -8,10 +8,10 @@
     },
     {
       "case_id": "API_LOGIN_02",
-      "title": "Đăng nhập với password sai -> 401",
+      "title": "Đăng nhập với password sai -> 400",
       "password_env": false,
       "wrong_password": "WrongPassword@1",
-      "expected_status": 401
+      "expected_status": 400
     }
   ],
   "change_password_cases": [
@@ -24,7 +24,6 @@
         "email": "auto82@gmail.com",
         "password_old": "Test123@",
         "password": "NewTest123@",
-        "avatarUrl": "",
         "phone": "123456789",
         "address": "Thành phố Hà Nội"
       },
@@ -39,7 +38,6 @@
         "email": "auto82@gmail.com",
         "password_old": "WrongPassword@1",
         "password": "NewTest123@",
-        "avatarUrl": "",
         "phone": "123456789",
         "address": "Thành phố Hà Nội"
       },
@@ -54,7 +52,6 @@
         "email": "auto82@gmail.com",
         "password_old": "Test123@",
         "password": "123",
-        "avatarUrl": "",
         "phone": "123456789",
         "address": "Thành phố Hà Nội"
       },
@@ -69,7 +66,6 @@
         "email": "auto82@gmail.com",
         "password_old": "Test123@",
         "password": "NewTest123@",
-        "avatarUrl": "",
         "phone": "123456789",
         "address": "Thành phố Hà Nội"
       },

@@ -57,9 +57,9 @@ class TestProfileAPI:
     )
     def test_update_profile(self, api_client, auth_token, case):
         allure.dynamic.title(case["title"])
+        headers = _headers(auth_token, case["use_valid_token"])
 
         with allure.step("Gọi PATCH /api/profile với payload data-driven"):
-            headers = _headers(auth_token, case["use_valid_token"])
             response = api_client.patch(
                 Endpoints.UPDATE_PROFILE,
                 data=case["payload"],
@@ -84,3 +84,37 @@ class TestProfileAPI:
                 assert verify_body.get("name") == case["payload"]["name"]
                 assert verify_body.get("phone") == case["payload"]["phone"]
                 assert verify_body.get("address") == case["payload"]["address"]
+
+    # ---------------- Đổi mật khẩu (qua PATCH /api/profile) ----------------
+    @allure.story("PATCH /api/profile (đổi mật khẩu)")
+    @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.profile
+    @pytest.mark.parametrize(
+        "case",
+        DATA["change_password_cases"],
+        ids=[c["case_id"] for c in DATA["change_password_cases"]],
+    )
+    def test_change_password(self, api_client, auth_token, case):
+        allure.dynamic.title(case["title"])
+
+        with allure.step("Gọi PATCH /api/profile với password_old/password data-driven"):
+            headers = _headers(auth_token, case["use_valid_token"])
+            response = api_client.patch(Endpoints.UPDATE_PROFILE, data=case["payload"], headers=headers)
+
+        with allure.step(f"Xác minh status code = {case['expected_status']}"):
+            assert response.status == case["expected_status"], (
+                f"[{case['case_id']}] Kỳ vọng {case['expected_status']}, thực tế {response.status}. "
+                f"Body: {response.text()[:500]}"
+            )
+
+        if case["expected_status"] == 200:
+            with allure.step("Xác minh response trả msg thành công và cập nhật lại mật khẩu cũ"):
+                body = response.json()
+                assert "success" in body.get("msg", "").lower()
+                api_client.patch(Endpoints.UPDATE_PROFILE,
+                    data={
+                        "password_old": case["payload"]["password"],
+                        "password": case["payload"]["password_old"]
+                    },
+                    headers=headers
+                )

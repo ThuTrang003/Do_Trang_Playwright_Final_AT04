@@ -31,11 +31,12 @@ class TestAccountSettingsUI:
         with allure.step(f"Chọn tab Theme = {case['theme']}"):
             settings_page.select_theme(case["theme"])
 
-        with allure.step("Xác minh tab đã được chọn (aria-selected=true)"):
+        with allure.step("Xác minh tab đã được chọn và lưu"):
             settings_page.attach_screenshot(f"theme_{case['case_id']}")
             assert settings_page.get_selected_theme() == case["theme"].lower(), (
                 f"[{case['case_id']}] Theme đang chọn không phải '{case['theme']}'"
             )
+            settings_page.save()
 
     # ---------------- Chọn màu & Save ----------------
     @allure.story("Chọn màu tài khoản (Select color)")

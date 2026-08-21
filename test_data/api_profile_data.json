@@ -20,10 +20,6 @@
       "use_valid_token": true,
       "payload": {
         "name": "API Automation User",
-        "email": "auto82@gmail.com",
-        "password_old": "",
-        "password": "",
-        "avatarUrl": "",
         "phone": "0977123456",
         "address": "Thành phố Hồ Chí Minh"
       },
@@ -34,13 +30,7 @@
       "title": "PATCH /api/profile thiếu field bắt buộc (email) -> 422",
       "use_valid_token": true,
       "payload": {
-        "name": "Nguyễn Văn A",
-        "email": "",
-        "password_old": "",
-        "password": "",
-        "avatarUrl": "",
-        "phone": "0977123456",
-        "address": "Thành phố Hồ Chí Minh"
+        "email": ""
       },
       "expected_status": 422
     },
@@ -51,9 +41,6 @@
       "payload": {
         "name": "No Token User",
         "email": "auto82@gmail.com",
-        "password_old": "",
-        "password": "",
-        "avatarUrl": "",
         "phone": "0977123456",
         "address": "Thành phố Hồ Chí Minh"
       },
@@ -65,14 +52,53 @@
       "use_valid_token": true,
       "payload": {
         "name": "Email already exists",
-        "email": "hoanp58@gmail.com",
-        "password_old": "",
-        "password": "",
-        "avatarUrl": "",
-        "phone": "0977123456",
-        "address": "Thành phố Hồ Chí Minh"
+        "email": "hoanp58@gmail.com"
       },
       "expected_status": 400
+    }
+  ],
+  "change_password_cases": [
+    {
+      "case_id": "API_PWD_01",
+      "title": "Đổi mật khẩu qua PATCH /api/profile với password_old/password hợp lệ -> 200",
+      "use_valid_token": true,
+      "payload": {
+        "name": "Trang",
+        "email": "auto82@gmail.com",
+        "password_old": "Test123@",
+        "password": "NewTest123@",
+        "phone": "123456789",
+        "address": "Thành phố Hà Nội"
+      },
+      "expected_status": 200
+    },
+    {
+      "case_id": "API_PWD_02",
+      "title": "Sai password_old -> 400",
+      "use_valid_token": true,
+      "payload": {
+        "name": "Trang",
+        "email": "auto82@gmail.com",
+        "password_old": "WrongPassword@1",
+        "password": "NewTest123@",
+        "phone": "123456789",
+        "address": "Thành phố Hà Nội"
+      },
+      "expected_status": 400
+    },
+    {
+      "case_id": "API_PWD_03",
+      "title": "Gọi PATCH /api/profile đổi mật khẩu không có token -> 401",
+      "use_valid_token": false,
+      "payload": {
+        "name": "Trang",
+        "email": "auto82@gmail.com",
+        "password_old": "Test123@",
+        "password": "NewTest123@",
+        "phone": "123456789",
+        "address": "Thành phố Hà Nội"
+      },
+      "expected_status": 401
     }
   ]
 }

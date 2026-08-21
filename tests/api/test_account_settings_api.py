@@ -53,33 +53,6 @@ class TestAccountAPI:
                 token = body.get("token") or body.get("accessToken") or body.get("data", {}).get("token")
                 assert token, "Response login 200 phải trả về access token"
 
-    # ---------------- Đổi mật khẩu (qua PATCH /api/profile) ----------------
-    @allure.story("PATCH /api/profile (đổi mật khẩu)")
-    @allure.severity(allure.severity_level.CRITICAL)
-    @pytest.mark.profile
-    @pytest.mark.parametrize(
-        "case",
-        DATA["change_password_cases"],
-        ids=[c["case_id"] for c in DATA["change_password_cases"]],
-    )
-    def test_change_password(self, api_client, auth_token, case):
-        allure.dynamic.title(case["title"])
-
-        with allure.step("Gọi PATCH /api/profile với password_old/password data-driven"):
-            headers = _headers(auth_token, case["use_valid_token"])
-            response = api_client.patch(Endpoints.UPDATE_PROFILE, data=case["payload"], headers=headers)
-
-        with allure.step(f"Xác minh status code = {case['expected_status']}"):
-            assert response.status == case["expected_status"], (
-                f"[{case['case_id']}] Kỳ vọng {case['expected_status']}, thực tế {response.status}. "
-                f"Body: {response.text()[:500]}"
-            )
-
-        if case["expected_status"] == 200:
-            with allure.step("Xác minh response trả msg thành công"):
-                body = response.json()
-                assert "success" in body.get("msg", "").lower()
-
     # ---------------- Update Settings (qua PATCH /api/profile) ----------------
     @allure.story("PATCH /api/profile (Setting account: theme/color)")
     @allure.severity(allure.severity_level.NORMAL)

@@ -12,7 +12,6 @@ import allure
 from api.endpoints import Endpoints
 from config.config import config
 
-
 def _auth_headers(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"} if token else {}
 
@@ -31,10 +30,6 @@ class TestProfileUIApiCombined:
                 Endpoints.UPDATE_PROFILE,
                 data={
                     "name": new_name,
-                    "email": config.LOGIN_EMAIL,
-                    "password_old": "",
-                    "password": "",
-                    "avatarUrl": "",
                     "phone": "0911222333",
                     "address": "Thành phố Hà Nội",
                 },
@@ -67,27 +62,45 @@ class TestProfileUIApiCombined:
 
     @allure.story("Đổi mật khẩu qua UI -> đăng nhập lại bằng API với mật khẩu mới")
     @allure.severity(allure.severity_level.BLOCKER)
-    def test_change_password_ui_then_login_api(self, home_page, api_client):
+    def test_change_password_ui_then_login_api(self, home_page, api_client, auth_token):
         old_password = config.LOGIN_PASSWORD
         new_password = "CombinedNew1234@"
 
         with allure.step("Mở menu avatar -> 'Profile' và đổi mật khẩu qua UI"):
             profile_page = home_page.go_to_profile()
             profile_page.change_password(old_password, new_password, new_password)
-            profile_page.save()
+            # Chờ API update password hoàn thành
+            with profile_page.page.expect_response(
+                lambda response:
+                    "/api/profile" in response.url
+                    and response.request.method == "PATCH"
+            ) as response_info:
+                profile_page.save()
+            update_response = response_info.value
+            assert update_response.status == 200, (
+                f"Update password thất bại: "
+                f"status={update_response.status}"
+            )
             profile_page.wait_for_toast()
-
         with allure.step("Gọi API Login bằng mật khẩu mới -> kỳ vọng 200"):
             response = api_client.post(
-                Endpoints.LOGIN, data={"email": config.LOGIN_EMAIL, "password": new_password}
+                Endpoints.LOGIN, data={
+                    "email": config.LOGIN_EMAIL,
+                    "password": new_password
+                }
             )
-            assert response.status == 200, "Login API bằng mật khẩu mới phải thành công"
+            assert response.status == 200, "Login API bằng mật khẩu mới không thành công"
 
-        with allure.step("Rollback: đổi lại mật khẩu cũ qua UI để không ảnh hưởng các test khác"):
-            # Vẫn đang ở trang Profile (chưa điều hướng đi đâu) nên có thể thao tác tiếp
-            profile_page.change_password(new_password, old_password, old_password)
-            profile_page.save()
-            profile_page.wait_for_toast()
+        with allure.step("Rollback: đổi lại mật khẩu cũ từ API để không ảnh hưởng các test khác"):
+            response = api_client.patch(
+                Endpoints.UPDATE_PROFILE,
+                data={
+                    "password_old": new_password,
+                    "password": old_password
+                },
+                headers=_auth_headers(auth_token),
+            )
+            assert response.status == 200, "Đổi lại mật khẩu cũ từ API không thành công"
 
     @allure.story("Gọi API cập nhật profile với token không hợp lệ trong khi UI vẫn đang đăng nhập")
     @allure.severity(allure.severity_level.NORMAL)
@@ -100,7 +113,7 @@ class TestProfileUIApiCombined:
                 data={"name": "Should Not Update", "email": config.LOGIN_EMAIL},
                 headers={"Authorization": "Bearer invalid.token.value"},
             )
-            assert response.status == 401
+            assert response.status == 401, "Cập nhật Profile thành không với Token không hợp lệ"
 
         with allure.step("Verify UI vẫn đang đăng nhập bình thường, dữ liệu không đổi"):
             profile_page = home_page.go_to_profile()

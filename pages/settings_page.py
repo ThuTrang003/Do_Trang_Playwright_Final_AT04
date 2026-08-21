@@ -1,7 +1,8 @@
 from playwright.sync_api import Page
-
 from pages.base_page import BasePage
+from core.logger import get_logger
 
+logger = get_logger("base_page")
 
 class SettingsPage(BasePage):
     def __init__(self, page: Page):
@@ -15,7 +16,7 @@ class SettingsPage(BasePage):
         # --- Select color ---
         # Card "Select color" -> tìm theo tiêu đề rồi lấy toàn bộ swatch bên trong CardContent
         self.color_card = page.locator("div.MuiCard-root", has=page.get_by_text("Select color", exact=True))
-        self.color_swatches = self.color_card.locator(".MuiCardContent-root .MuiBox-root")
+        self.color_swatches = self.color_card.locator("div.MuiCardContent-root div.MuiStack-root > div.MuiBox-root")
 
         # --- Nút hành động ---
         self.save_button = page.get_by_role("button", name="Save")
@@ -46,11 +47,17 @@ class SettingsPage(BasePage):
     # ---------- Select color ----------
     def select_color(self, index: int):
         """Chọn màu theo vị trí (0-based) trong lưới màu."""
-        self.color_swatches.nth(index).click()
+        color = self.color_swatches.nth(index)
+
+        logger.info(f"HTML: {color.evaluate('(el) => el.outerHTML')}")
+        color.click()
         return self
 
     def color_count(self) -> int:
-        return self.color_swatches.count()
+        self.color_swatches.first.wait_for(state="visible")
+        count = self.color_swatches.count()
+        logger.info(f"Count color: {count}")
+        return count
 
     # ---------- Hành động ----------
     def save(self):

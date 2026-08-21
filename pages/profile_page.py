@@ -1,6 +1,9 @@
 from playwright.sync_api import Page
 
 from pages.base_page import BasePage
+from core.logger import get_logger
+
+logger = get_logger("base_page")
 
 
 class ProfilePage(BasePage):
@@ -10,8 +13,8 @@ class ProfilePage(BasePage):
         # --- Thông tin cá nhân ---
         self.name_input = page.locator('input[name="name"]')
         self.phone_input = page.locator('input[name="phone"]')
-        self.division_input = page.get_by_label("Division")
-        self.ward_input = page.get_by_label("Ward")
+        self.division_input = page.locator("#address-division")
+        self.ward_input = page.locator("#address-ward")
         self.address_textarea = page.locator("#address")
         self.avatar_file_input = page.locator('input[name="avatar"]')
         self.avatar_dropzone = page.get_by_text("Upload photo")
@@ -36,16 +39,29 @@ class ProfilePage(BasePage):
         return self
 
     def update_division(self, division: str):
-        """Chọn Division qua MUI Autocomplete: gõ text rồi Enter."""
+        """Select Division from MUI Autocomplete."""
         self.division_input.click()
         self.division_input.fill(division)
-        self.page.keyboard.press("Enter")
+        
+        logger.info(f"Division value: {division}")
+
+        option = self.page.get_by_role("option", name=division)
+        option.wait_for(state="visible")
+        option.filter(has_text=division)
+        option.click()
+            
         return self
 
     def update_ward(self, ward: str):
+        """Select Ward from MUI Autocomplete."""
         self.ward_input.click()
         self.ward_input.fill(ward)
-        self.page.keyboard.press("Enter")
+
+        option = self.page.get_by_role("option", name=ward)
+        option.wait_for(state="visible")
+        option.filter(has_text=ward)
+        option.click()
+
         return self
 
     def upload_avatar(self, file_path: str):
