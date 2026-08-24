@@ -20,6 +20,7 @@
       "use_valid_token": true,
       "payload": {
         "name": "API Automation User",
+        "email": "auto82@gmail.com",
         "phone": "0977123456",
         "address": "Thành phố Hồ Chí Minh"
       },
@@ -48,13 +49,13 @@
     },
     {
       "case_id": "API_PROFILE_PATCH_04",
-      "title": "PATCH /api/profile trùng email -> 400",
+      "title": "PATCH /api/profile trùng email -> 422",
       "use_valid_token": true,
       "payload": {
         "name": "Email already exists",
         "email": "hoanp58@gmail.com"
       },
-      "expected_status": 400
+      "expected_status": 422
     }
   ],
   "change_password_cases": [
@@ -74,7 +75,7 @@
     },
     {
       "case_id": "API_PWD_02",
-      "title": "Sai password_old -> 400",
+      "title": "Sai password_old -> 422",
       "use_valid_token": true,
       "payload": {
         "name": "Trang",
@@ -84,7 +85,7 @@
         "phone": "123456789",
         "address": "Thành phố Hà Nội"
       },
-      "expected_status": 400
+      "expected_status": 422
     },
     {
       "case_id": "API_PWD_03",

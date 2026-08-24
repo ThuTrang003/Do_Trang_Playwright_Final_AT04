@@ -1,0 +1,52 @@
+{
+  "login_cases": [
+    {
+      "case_id": "API_LOGIN_01",
+      "title": "Đăng nhập với email/password hợp lệ -> 200",
+      "password_env": true,
+      "expected_status": 200
+    },
+    {
+      "case_id": "API_LOGIN_02",
+      "title": "Đăng nhập với password sai -> 400",
+      "password_env": false,
+      "wrong_password": "WrongPassword@1",
+      "expected_status": 400
+    }
+  ],
+  "update_settings_cases": [
+    {
+      "case_id": "API_SETTINGS_01",
+      "title": "PATCH /api/profile cập nhật config.theme + config.mainColor hợp lệ -> 200",
+      "use_valid_token": true,
+      "payload": {
+        "name": "API theme + mainColor success",
+        "email": "auto82@gmail.com",
+        "config": {"theme": "dark", "mainColor": "#4caf50"}
+      },
+      "expected_status": 200
+    },
+    {
+      "case_id": "API_SETTINGS_02",
+      "title": "config.theme không hợp lệ (ngoài light/dark/system) -> 400",
+      "use_valid_token": true,
+      "payload": {
+        "name": "API theme invalid",
+        "email": "auto82@gmail.com",
+        "config": {"theme": "rainbow", "mainColor": "#4caf50"}
+      },
+      "expected_status": 400
+    },
+    {
+      "case_id": "API_SETTINGS_03",
+      "title": "Gọi API cập nhật settings không có token -> 401",
+      "use_valid_token": false,
+      "payload": {
+        "name": "API not token",
+        "email": "auto82@gmail.com",
+        "config": {"theme": "dark", "mainColor": "#4caf50"}
+      },
+      "expected_status": 401
+    }
+  ]
+}

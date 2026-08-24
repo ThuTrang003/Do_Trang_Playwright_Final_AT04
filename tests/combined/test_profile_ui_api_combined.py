@@ -95,6 +95,7 @@ class TestProfileUIApiCombined:
             response = api_client.patch(
                 Endpoints.UPDATE_PROFILE,
                 data={
+                    "email": config.LOGIN_EMAIL,
                     "password_old": new_password,
                     "password": old_password
                 },

@@ -28,6 +28,9 @@ def _get_int(key: str, default: int) -> int:
 
 
 class Config:
+    # ---- Đường dẫn gốc ----
+    ROOT_DIR = ROOT_DIR
+
     # ---- UI ----
     BASE_URL: str = os.getenv("BASE_URL", "https://book.anhtester.com")
     BROWSER: str = os.getenv("BROWSER", "chromium")

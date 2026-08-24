@@ -12,6 +12,7 @@ from pages.login_page import LoginPage
 from utils.data_reader import load_json
 
 DATA = load_json("profile_data.json")
+AVATARS_DIR = config.ROOT_DIR / "test_data" / "avatars"
 
 @allure.feature("Change my profile")
 @pytest.mark.ui
@@ -135,25 +136,60 @@ class TestChangeProfileUI:
                 rollback_profile.save()
 
     # ---------------- Upload avatar ----------------
+    # @allure.story("Upload ảnh đại diện")
+    # @allure.severity(allure.severity_level.NORMAL)
+    # def test_upload_avatar_success(self, home_page, tmp_path):
+    #     with allure.step("Chuẩn bị file ảnh test (PNG 1x1 tạo động, không phụ thuộc file cố định)"):
+    #         avatar_file = tmp_path / "avatar_test.png"
+    #         png_1x1 = bytes.fromhex(
+    #             "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753"
+    #             "de0000000c4944415478da6360000002000100e921bc330000000049454e44ae426082"
+    #         )
+    #         avatar_file.write_bytes(png_1x1)
+
+    #     with allure.step("Mở menu avatar -> chọn 'Profile' rồi upload avatar"):
+    #         profile_page = home_page.go_to_profile()
+    #         profile_page.upload_avatar(str(avatar_file))
+    #         profile_page.save()
+ 
+    #     with allure.step("Xác minh upload thành công"):
+    #         profile_page.attach_screenshot("after_upload_avatar")
+    #         profile_page.assert_toast_message("success")
+
     @allure.story("Upload ảnh đại diện")
     @allure.severity(allure.severity_level.NORMAL)
-    def test_upload_avatar_success(self, home_page, tmp_path):
-        with allure.step("Chuẩn bị file ảnh test (PNG 1x1 tạo động, không phụ thuộc file cố định)"):
-            avatar_file = tmp_path / "avatar_test.png"
-            png_1x1 = bytes.fromhex(
-                "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753"
-                "de0000000c4944415478da6360000002000100e921bc330000000049454e44ae426082"
-            )
-            avatar_file.write_bytes(png_1x1)
+    @pytest.mark.parametrize(
+        "case", DATA["upload_cases"], ids=[c["case_id"] for c in DATA["upload_cases"]]
+    )
+    def test_upload_avatar(self, home_page, case):
+        allure.dynamic.title(case["title"])
+        file_path = AVATARS_DIR / case["file_name"]
+        assert file_path.exists(), (
+            f"Không tìm thấy file resource: {file_path}. "
+            f"Kiểm tra lại thư mục test_data/avatars/ file avatar đã tồn tại."
+        )
 
-        with allure.step("Mở menu avatar -> chọn 'Profile' rồi upload avatar"):
+        with allure.step("Mở menu avatar -> chọn 'Profile'"):
             profile_page = home_page.go_to_profile()
-            profile_page.upload_avatar(str(avatar_file))
+
+        with allure.step(f"Chọn file '{case['file_name']}' để upload avatar"):
+            profile_page.upload_avatar(str(file_path))
             profile_page.save()
- 
-        with allure.step("Xác minh upload thành công"):
-            profile_page.attach_screenshot("after_upload_avatar")
-            profile_page.assert_toast_message("success")
+
+        with allure.step("Xác minh thông báo kết quả"):
+            profile_page.attach_screenshot(f"after_upload_{case['case_id']}")
+            profile_page.assert_toast_message(case)
+
+        if case["expect_success"]:
+            with allure.step("Verify ảnh preview đã cập nhật đúng theo user hiện tại"):
+                avatar_src = profile_page.get_avatar_src()
+                assert "/$avatar-image/" in avatar_src, (
+                    f"[{case['case_id']}] avatar src không đúng định dạng: '{avatar_src}'"
+                )
+                assert config.LOGIN_EMAIL in avatar_src, (
+                    f"[{case['case_id']}] avatar src không chứa đúng email user hiện tại: "
+                    f"'{avatar_src}'"
+                )
 
     # ---------------- Nút Save bị disable khi chưa có thay đổi ----------------
     @allure.story("Trạng thái nút Save Profile")
@@ -173,3 +209,4 @@ class TestChangeProfileUI:
             assert profile_page.is_save_button_enabled(), (
                 "Kỳ vọng nút 'Save Profile' được enable ngay sau khi có thay đổi"
             )
+

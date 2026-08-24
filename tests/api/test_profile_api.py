@@ -12,6 +12,7 @@ import pytest
 import allure
 
 from api.endpoints import Endpoints
+from config.config import config
 from utils.data_reader import load_json
 
 DATA = load_json("api_profile_data.json")
@@ -113,6 +114,7 @@ class TestProfileAPI:
                 assert "success" in body.get("msg", "").lower()
                 api_client.patch(Endpoints.UPDATE_PROFILE,
                     data={
+                        "email": config.LOGIN_EMAIL,
                         "password_old": case["payload"]["password"],
                         "password": case["payload"]["password_old"]
                     },

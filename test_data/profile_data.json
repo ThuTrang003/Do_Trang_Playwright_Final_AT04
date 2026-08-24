@@ -85,5 +85,35 @@
       "expect_message_contains": "Password confirmation does not match.",
       "rollback": false
     }
+  ],
+  "upload_cases": [
+    {
+      "case_id": "AVATAR_UI_01",
+      "title": "Upload avatar định dạng JPG hợp lệ -> thành công",
+      "file_name": "valid_avatar.jpg",
+      "expect_success": true,
+      "expect_message_contains": "success"
+    },
+    {
+      "case_id": "AVATAR_UI_02",
+      "title": "Upload avatar định dạng PNG hợp lệ -> thành công",
+      "file_name": "valid_avatar.png",
+      "expect_success": true,
+      "expect_message_contains": "success"
+    },
+    {
+      "case_id": "AVATAR_UI_03",
+      "title": "Upload file sai định dạng (.txt, bypass thuộc tính accept của input) -> báo lỗi",
+      "file_name": "invalid_type.txt",
+      "expect_success": false,
+      "expect_message_contains": "invalid"
+    },
+    {
+      "case_id": "AVATAR_UI_04",
+      "title": "Upload file vượt quá 3.0 MB -> báo lỗi giới hạn dung lượng",
+      "file_name": "oversized_avatar.jpg",
+      "expect_success": false,
+      "expect_message_contains": "size"
+    }
   ]
 }

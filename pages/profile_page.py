@@ -18,6 +18,7 @@ class ProfilePage(BasePage):
         self.address_textarea = page.locator("#address")
         self.avatar_file_input = page.locator('input[name="avatar"]')
         self.avatar_dropzone = page.get_by_text("Upload photo")
+        self.avatar_preview_image = page.locator("img[src*='avatar-image']")
         self.email_input = page.locator('input[name="email"]')
 
         # --- Đổi mật khẩu (nằm chung trang Profile) ---
@@ -91,6 +92,17 @@ class ProfilePage(BasePage):
     # ---------- Getter để verify ----------
     def get_name_value(self) -> str:
         return self.name_input.input_value()
+
+    def get_avatar_src(self, timeout: int = 8000) -> str:
+        """
+        Trả về giá trị `src` của ảnh preview avatar (rỗng nếu chưa từng upload/không tìm thấy).
+        Dùng để verify sau khi upload thành công.
+        """
+        try:
+            self.avatar_preview_image.first.wait_for(state="visible", timeout=timeout)
+            return self.avatar_preview_image.first.get_attribute("src") or ""
+        except Exception:
+            return ""
 
     def get_phone_value(self) -> str:
         return self.phone_input.input_value()

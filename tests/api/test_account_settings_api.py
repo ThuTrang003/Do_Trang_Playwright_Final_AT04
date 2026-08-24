@@ -12,7 +12,7 @@ from api.endpoints import Endpoints
 from config.config import config
 from utils.data_reader import load_json
 
-DATA = load_json("api_account_data.json")
+DATA = load_json("api_account_settings_data.json")
 
 def _headers(token, use_valid_token: bool) -> dict:
     if use_valid_token and token:
