@@ -1,0 +1,73 @@
+{
+  "update_profile_api_cases": [
+    {
+      "case_id": "COMBINED_PROFILE_01",
+      "title": "Cập nhật profile qua API -> Name hiển thị đúng trên UI",
+      "payload": {
+        "name": "Combined API Update User",
+        "email": "auto82@gmail.com",
+        "phone": "0911222333",
+        "address": "Thành phố Hà Nội"
+      },
+      "expected_status": 200,
+      "expect_message_contains": "success"
+    }
+  ],
+
+  "update_profile_ui_cases": [
+    {
+      "case_id": "COMBINED_PROFILE_02",
+      "title": "Cập nhật profile qua UI -> verify dữ liệu qua API",
+      "payload": {
+        "name": "Combined UI Update User",
+        "phone": "0933444555"
+      },
+      "expected_status": 200
+    }
+  ],
+
+  "change_password_cases": [
+    {
+      "case_id": "COMBINED_PROFILE_03",
+      "title": "Đổi mật khẩu qua UI -> login lại bằng API với mật khẩu mới",
+      "new_password": "CombinedNew1234@",
+      "expected_update_status": 200,
+      "expected_login_status": 200,
+      "rollback": true
+    }
+  ],
+
+  "invalid_token_cases": [
+    {
+      "case_id": "COMBINED_PROFILE_04",
+      "title": "PATCH profile với token không hợp lệ -> 401 và không ảnh hưởng UI session",
+      "token": "invalid.token.value",
+      "payload": {
+        "name": "Should Not Update",
+        "email": "auto82@gmail.com"
+      },
+      "expected_status": 401
+    }
+  ],
+
+  "switch_theme_cases": [
+    {
+      "case_id": "COMBINED_SETTINGS_01",
+      "title": "Chuyển Theme sang Dark qua UI -> verify qua API",
+      "theme": "dark",
+      "expected_status": 200,
+      "expect_message_contains": "success"
+    }
+  ],
+
+  "upload_avatar_cases": [
+    {
+      "case_id": "COMBINED_PROFILE_05",
+      "title": "Upload avatar qua UI -> verify avatarUrl qua API",
+      "file_name": "valid_avatar.jpg",
+      "expected_status": 200,
+      "expected_avatar": true,
+      "expect_message_contains": "success"
+    }
+  ]
+}

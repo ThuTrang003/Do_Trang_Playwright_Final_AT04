@@ -58,6 +58,7 @@ class ProfilePage(BasePage):
         self.ward_input.click()
         self.ward_input.fill(ward)
 
+        logger.info(f"Ward value: {ward}")
         option = self.page.get_by_role("option", name=ward)
         option.wait_for(state="visible")
         option.filter(has_text=ward)

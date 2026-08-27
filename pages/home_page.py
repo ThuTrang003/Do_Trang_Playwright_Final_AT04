@@ -10,8 +10,6 @@ class HomePage(BasePage):
 
     def __init__(self, page: Page):
         super().__init__(page)
-        # Nút avatar là button chứa .MuiAvatar-root, nằm trong header (lấy .last để tránh
-        # trùng với avatar khác nếu có trong trang, vd trong card "Welcome")
         self.avatar_button = page.locator("header button:has(.MuiAvatar-root)")
         self.profile_menu_item = page.get_by_role("menuitem", name="Profile")
         self.settings_menu_item = page.get_by_role("menuitem", name="Settings")
@@ -25,8 +23,10 @@ class HomePage(BasePage):
         return self
 
     def open_avatar_menu(self):
+        self.goto("/")
+        self.avatar_button.wait_for(state="visible", timeout=10000)
         self.click(self.avatar_button, "Nút Avatar (mở menu tài khoản)")
-        self.profile_menu_item.wait_for(state="visible", timeout=5000)
+        self.profile_menu_item.wait_for(state="visible", timeout=10000)
         return self
 
     def go_to_profile(self) -> ProfilePage:

@@ -171,7 +171,7 @@ class BasePage:
         )
         return error_text
  
-    def assert_redirected_to(self, url_substring: str, case: dict, timeout: int = 10000):
+    def assert_redirected_to(self, url_substring: str, case: dict, timeout: int = 20000):
         """
         Assert trang tự động điều hướng tới URL chứa `url_substring` 
         """

@@ -22,11 +22,11 @@ class TestAccountSettingsUI:
     @pytest.mark.parametrize(
         "case", DATA["theme_cases"], ids=[c["case_id"] for c in DATA["theme_cases"]]
     )
-    def test_switch_theme(self, home_page, case):
+    def test_switch_theme(self, loggedin_home_storage, case):
         allure.dynamic.title(case["title"])
 
         with allure.step("Mở menu avatar -> chọn 'Settings'"):
-            settings_page = home_page.go_to_settings()
+            settings_page = loggedin_home_storage.go_to_settings()
 
         with allure.step(f"Chọn tab Theme = {case['theme']}"):
             settings_page.select_theme(case["theme"])
@@ -44,11 +44,11 @@ class TestAccountSettingsUI:
     @pytest.mark.parametrize(
         "case", DATA["color_cases"], ids=[c["case_id"] for c in DATA["color_cases"]]
     )
-    def test_select_color_and_save(self, home_page, case):
+    def test_select_color_and_save(self, loggedin_home_storage, case):
         allure.dynamic.title(case["title"])
 
         with allure.step("Mở menu avatar -> chọn 'Settings'"):
-            settings_page = home_page.go_to_settings()
+            settings_page = loggedin_home_storage.go_to_settings()
 
         with allure.step(f"Chọn màu tại vị trí index={case['color_index']}"):
             assert settings_page.color_count() > case["color_index"], "Không đủ số lượng màu để chọn"
@@ -68,11 +68,11 @@ class TestAccountSettingsUI:
     @pytest.mark.parametrize(
         "case", DATA["reset_cases"], ids=[c["case_id"] for c in DATA["reset_cases"]]
     )
-    def test_reset_discards_unsaved_change(self, home_page, case):
+    def test_reset_discards_unsaved_change(self, loggedin_home_storage, case):
         allure.dynamic.title(case["title"])
 
         with allure.step("Mở menu avatar -> chọn 'Settings', ghi nhận theme ban đầu"):
-            settings_page = home_page.go_to_settings()
+            settings_page = loggedin_home_storage.go_to_settings()
             original_theme = settings_page.get_selected_theme()
 
         with allure.step(f"Đổi theme sang '{case['theme']}' nhưng KHÔNG Save"):
@@ -91,9 +91,9 @@ class TestAccountSettingsUI:
     # ---------------- Save không có thay đổi vẫn hoạt động bình thường ----------------
     @allure.story("Save khi không có thay đổi")
     @allure.severity(allure.severity_level.MINOR)
-    def test_save_without_change_does_not_error(self, home_page):
+    def test_save_without_change_does_not_error(self, loggedin_home_storage):
         with allure.step("Mở menu avatar -> chọn 'Settings' và bấm Save ngay (không đổi gì)"):
-            settings_page = home_page.go_to_settings()
+            settings_page = loggedin_home_storage.go_to_settings()
             settings_page.save()
 
         with allure.step("Xác minh không có lỗi phát sinh (trang vẫn hoạt động bình thường)"):

@@ -25,11 +25,11 @@ class TestChangeProfileUI:
     @pytest.mark.parametrize(
         "case", DATA["info_cases"], ids=[c["case_id"] for c in DATA["info_cases"]]
     )
-    def test_update_name_phone(self, home_page, case):
+    def test_update_name_phone(self, loggedin_home_storage, case):
         allure.dynamic.title(case["title"])
 
         with allure.step("Mở menu avatar -> chọn 'Profile'"):
-            profile_page = home_page.go_to_profile()
+            profile_page = loggedin_home_storage.go_to_profile()
 
         with allure.step(f"Nhập Name='{case['name']}', Phone='{case['phone']}'"):
             profile_page.update_name(case["name"])
@@ -52,11 +52,11 @@ class TestChangeProfileUI:
     @pytest.mark.parametrize(
         "case", DATA["address_cases"], ids=[c["case_id"] for c in DATA["address_cases"]]
     )
-    def test_update_address(self, home_page, case):
+    def test_update_address(self, loggedin_home_storage, case):
         allure.dynamic.title(case["title"])
 
         with allure.step("Mở menu avatar -> chọn 'Profile'"):
-            profile_page = home_page.go_to_profile()
+            profile_page = loggedin_home_storage.go_to_profile()
 
         with allure.step(f"Chọn Division='{case['division']}', Ward='{case['ward']}'"):
             profile_page.update_division(case["division"])
@@ -76,7 +76,7 @@ class TestChangeProfileUI:
     @pytest.mark.parametrize(
         "case", DATA["password_cases"], ids=[c["case_id"] for c in DATA["password_cases"]]
     )
-    def test_change_password(self, home_page, case):
+    def test_change_password(self, loggedin_home_storage, case):
         """
         Email/Password dùng để đăng nhập LẤY TỪ config (.env):
         - Case cần "mật khẩu hiện tại đúng" (use_config_old_password=true) -> dùng config.LOGIN_PASSWORD.
@@ -90,10 +90,10 @@ class TestChangeProfileUI:
         """
         allure.dynamic.title(case["title"])
         old_password = config.LOGIN_PASSWORD if case["use_config_old_password"] else case["old_password"]
-        page = home_page.page
+        page = loggedin_home_storage.page
 
         with allure.step("Mở menu avatar -> chọn 'Profile'"):
-            profile_page = home_page.go_to_profile()
+            profile_page = loggedin_home_storage.go_to_profile()
 
         with allure.step("Nhập Old Password / New Password / Confirmation"):
             profile_page.change_password(
@@ -119,7 +119,7 @@ class TestChangeProfileUI:
                 "để các test/fixture sau vẫn đăng nhập được"
             ):
                 relogin_page = LoginPage(page)
-                relogin_page.open()
+                # relogin_page.open()
                 relogin_page.login(config.LOGIN_EMAIL, case["new_password"])
                 assert relogin_page.is_logged_in(), (
                     f"[{case['case_id']}] Rollback THẤT BẠI ở bước đăng nhập lại bằng mật khẩu mới "
@@ -136,32 +136,12 @@ class TestChangeProfileUI:
                 rollback_profile.save()
 
     # ---------------- Upload avatar ----------------
-    # @allure.story("Upload ảnh đại diện")
-    # @allure.severity(allure.severity_level.NORMAL)
-    # def test_upload_avatar_success(self, home_page, tmp_path):
-    #     with allure.step("Chuẩn bị file ảnh test (PNG 1x1 tạo động, không phụ thuộc file cố định)"):
-    #         avatar_file = tmp_path / "avatar_test.png"
-    #         png_1x1 = bytes.fromhex(
-    #             "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753"
-    #             "de0000000c4944415478da6360000002000100e921bc330000000049454e44ae426082"
-    #         )
-    #         avatar_file.write_bytes(png_1x1)
-
-    #     with allure.step("Mở menu avatar -> chọn 'Profile' rồi upload avatar"):
-    #         profile_page = home_page.go_to_profile()
-    #         profile_page.upload_avatar(str(avatar_file))
-    #         profile_page.save()
- 
-    #     with allure.step("Xác minh upload thành công"):
-    #         profile_page.attach_screenshot("after_upload_avatar")
-    #         profile_page.assert_toast_message("success")
-
     @allure.story("Upload ảnh đại diện")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize(
         "case", DATA["upload_cases"], ids=[c["case_id"] for c in DATA["upload_cases"]]
     )
-    def test_upload_avatar(self, home_page, case):
+    def test_upload_avatar(self, loggedin_home_storage, case):
         allure.dynamic.title(case["title"])
         file_path = AVATARS_DIR / case["file_name"]
         assert file_path.exists(), (
@@ -170,7 +150,7 @@ class TestChangeProfileUI:
         )
 
         with allure.step("Mở menu avatar -> chọn 'Profile'"):
-            profile_page = home_page.go_to_profile()
+            profile_page = loggedin_home_storage.go_to_profile()
 
         with allure.step(f"Chọn file '{case['file_name']}' để upload avatar"):
             profile_page.upload_avatar(str(file_path))
@@ -194,9 +174,9 @@ class TestChangeProfileUI:
     # ---------------- Nút Save bị disable khi chưa có thay đổi ----------------
     @allure.story("Trạng thái nút Save Profile")
     @allure.severity(allure.severity_level.MINOR)
-    def test_save_button_disabled_when_no_change(self, home_page):
+    def test_save_button_disabled_when_no_change(self, loggedin_home_storage):
         with allure.step("Mở menu avatar -> chọn 'Profile', chưa chỉnh sửa gì"):
-            profile_page = home_page.go_to_profile()
+            profile_page = loggedin_home_storage.go_to_profile()
 
         with allure.step("Xác minh nút Save Profile đang bị disable"):
             profile_page.attach_screenshot("save_button_initial_state")
