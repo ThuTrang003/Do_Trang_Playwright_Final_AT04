@@ -17,6 +17,11 @@ class HomePage(BasePage):
         self.logout_button = page.get_by_role("button", name="Logout")
 
     def open_avatar_menu(self):
+        """
+        Mở menu tài khoản bằng cách click vào Avatar.
+        Returns:
+            HomePage: Đối tượng HomePage hiện tại.
+        """
         self.goto("https://book.anhtester.com/")
         self.avatar_button.wait_for(state="visible", timeout=10000)
         self.click(self.avatar_button, "Nút Avatar (mở menu tài khoản)")
@@ -24,13 +29,21 @@ class HomePage(BasePage):
         return self
 
     def go_to_profile(self) -> ProfilePage:
-        """Điều hướng client-side (không reload) tới 'Change my profile'."""
+        """
+        Điều hướng từ Home Page đến trang ProfilePage.
+        Returns:
+            ProfilePage: Đối tượng đại diện cho trang ProfilePage.
+        """
         self.open_avatar_menu()
         self.click(self.profile_menu_item, "Menu item 'Profile'")
         return ProfilePage(self.page)
 
     def go_to_settings(self) -> SettingsPage:
-        """Điều hướng client-side (không reload) tới 'Setting account'."""
+        """
+        Điều hướng từ Home Page đến trang SettingsPage.
+        Returns:
+            SettingsPage: Đối tượng đại diện cho trang SettingsPage.
+        """
         self.open_avatar_menu()
         self.click(self.settings_menu_item, "Menu item 'Settings'")
         return SettingsPage(self.page)
