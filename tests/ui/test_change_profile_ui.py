@@ -73,6 +73,7 @@ class TestChangeProfileUI:
     # ---------------- Đổi mật khẩu ----------------
     @allure.story("Đổi mật khẩu")
     @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.password_change
     @pytest.mark.parametrize(
         "case", DATA["password_cases"], ids=[c["case_id"] for c in DATA["password_cases"]]
     )
@@ -119,7 +120,6 @@ class TestChangeProfileUI:
                 "để các test/fixture sau vẫn đăng nhập được"
             ):
                 relogin_page = LoginPage(page)
-                # relogin_page.open()
                 relogin_page.login(config.LOGIN_EMAIL, case["new_password"])
                 assert relogin_page.is_logged_in(), (
                     f"[{case['case_id']}] Rollback THẤT BẠI ở bước đăng nhập lại bằng mật khẩu mới "

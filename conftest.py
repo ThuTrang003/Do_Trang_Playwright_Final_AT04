@@ -50,26 +50,6 @@ def page(context):
     page = context.new_page()
     yield page
     page.close()
-
-
-# @pytest.fixture
-# def authenticated_page(page):
-#     """
-#     Page đã đăng nhập sẵn bằng tài khoản trong .env, DỪNG LẠI ở HomePage ('/').
-#     Từ đây, dùng HomePage(page).go_to_profile() / go_to_settings() để điều hướng tiếp
-#     """
-#     login_page = LoginPage(page)
-#     login_page.open()
-#     login_page.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD)
-#     assert login_page.is_logged_in(), "Đăng nhập thất bại trong fixture authenticated_page"
-#     yield page
-
-
-# @pytest.fixture
-# def home_page(authenticated_page):
-#     """Trả về HomePage đã sẵn sàng để điều hướng tới Profile/Settings."""
-#     return HomePage(authenticated_page)
-
 # ---------------------------------------------------------------------------
 # API request context
 # ---------------------------------------------------------------------------
@@ -82,7 +62,6 @@ def api_request_context(playwright_instance):
 @pytest.fixture
 def api_client(api_request_context):
     return ApiClient(api_request_context, base_url=config.API_BASE_URL)
-
 
 @pytest.fixture(scope="session")
 def auth_token(playwright_instance):

@@ -3,17 +3,20 @@
     {
       "case_id": "SETTINGS_UI_THEME_01",
       "title": "Chuyển Theme sang Dark -> tab Dark được chọn",
-      "theme": "dark"
+      "theme": "dark",
+      "expect_message_contains": "success"
     },
     {
       "case_id": "SETTINGS_UI_THEME_02",
       "title": "Chuyển Theme sang Light -> tab Light được chọn",
-      "theme": "light"
+      "theme": "light",
+      "expect_message_contains": "success"
     },
     {
       "case_id": "SETTINGS_UI_THEME_03",
       "title": "Chuyển Theme sang System -> tab System được chọn",
-      "theme": "system"
+      "theme": "system",
+      "expect_message_contains": "success"
     }
   ],
   "color_cases": [

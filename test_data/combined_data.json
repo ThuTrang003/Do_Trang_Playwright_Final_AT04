@@ -13,7 +13,7 @@
       "expect_message_contains": "success"
     }
   ],
-
+  
   "update_profile_ui_cases": [
     {
       "case_id": "COMBINED_PROFILE_02",
@@ -22,7 +22,8 @@
         "name": "Combined UI Update User",
         "phone": "0933444555"
       },
-      "expected_status": 200
+      "expected_status": 200,
+      "expect_message_contains": "success"
     }
   ],
 

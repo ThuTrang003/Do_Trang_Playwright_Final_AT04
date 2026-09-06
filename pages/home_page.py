@@ -6,7 +6,7 @@ from pages.settings_page import SettingsPage
 
 
 class HomePage(BasePage):
-    PATH = "/"
+    PATH = "https://book.anhtester.com/"
 
     def __init__(self, page: Page):
         super().__init__(page)
@@ -16,14 +16,8 @@ class HomePage(BasePage):
         self.home_menu_item = page.get_by_role("menuitem", name="Home")
         self.logout_button = page.get_by_role("button", name="Logout")
 
-    def open(self):
-        """Chỉ dùng để mở Home LẦN ĐẦU (vd ngay sau khi login redirect về '/').
-        KHÔNG gọi lại open() giữa chừng test vì sẽ full-reload -> mất session."""
-        self.goto(self.PATH)
-        return self
-
     def open_avatar_menu(self):
-        self.goto("/")
+        self.goto("https://book.anhtester.com/")
         self.avatar_button.wait_for(state="visible", timeout=10000)
         self.click(self.avatar_button, "Nút Avatar (mở menu tài khoản)")
         self.profile_menu_item.wait_for(state="visible", timeout=10000)

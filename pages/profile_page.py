@@ -67,7 +67,6 @@ class ProfilePage(BasePage):
         return self
 
     def upload_avatar(self, file_path: str):
-        # input[type=file] bị ẩn (visually-hidden) -> set_input_files vẫn hoạt động trực tiếp
         self.avatar_file_input.set_input_files(file_path)
         return self
 

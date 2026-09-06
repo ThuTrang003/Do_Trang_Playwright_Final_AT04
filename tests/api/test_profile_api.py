@@ -90,6 +90,7 @@ class TestProfileAPI:
     @allure.story("PATCH /api/profile (đổi mật khẩu)")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.profile
+    @pytest.mark.password_change
     @pytest.mark.parametrize(
         "case",
         DATA["change_password_cases"],

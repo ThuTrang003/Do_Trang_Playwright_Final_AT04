@@ -61,12 +61,12 @@ class TestProfileUIApiCombined:
         new_name = case["payload"]["name"]
         new_phone = case["payload"]["phone"]
 
-        with allure.step("Mở menu avatar -> 'Profile' và cập nhật Name qua UI"):
+        with allure.step("Mở menu avatar -> 'Profile' và cập nhật Name và phone qua UI"):
             profile_page = loggedin_home_storage.go_to_profile()
             profile_page.update_name(new_name)
             profile_page.update_phone(new_phone)
             profile_page.save()
-            profile_page.wait_for_toast()
+            profile_page.assert_toast_message(case)   
 
         with allure.step("Gọi GET /api/me để verify dữ liệu đồng bộ backend"):
             response = api_client.get(Endpoints.GET_PROFILE, headers=_auth_headers(auth_token))
@@ -83,7 +83,8 @@ class TestProfileUIApiCombined:
             )
 
     @allure.story("Đổi mật khẩu qua UI -> đăng nhập lại bằng API với mật khẩu mới")
-    @allure.severity(allure.severity_level.BLOCKER)
+    @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.password_change
     @pytest.mark.parametrize(
             "case",
             DATA["change_password_cases"],
